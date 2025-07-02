@@ -5,6 +5,9 @@ public class SignUpRequestDto {
 	private String email;
 	private String password;
 	private String fullName;
+	private String role;
+	private String employeeId;
+	
 	public String getEmail() {
 		return email;
 	}
@@ -23,6 +26,20 @@ public class SignUpRequestDto {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+	
+	
 	
 	
 

@@ -42,7 +42,7 @@ public class AuthService {
 			.filter(user -> user.getPassword().equals(request.getPassword()))
 			.map(user -> {
 				String token = jwtUtil.generateToken(user.getEmail()); // email as subject
-				return new AuthResponseDto(token, user.getEmail(), user.getFullName());
+				return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole());
 			})
 			.orElse(null);
 	}
@@ -56,7 +56,8 @@ public class AuthService {
 		user.setEmail(request.getEmail());
 		user.setPassword(request.getPassword());
 		user.setFullName(request.getFullName());
-//		user.setRole("USER");
+		user.setRole(request.getRole());
+		user.setEmployeeId(request.getEmployeeId());
 		
 		userRepository.save(user);		
 		return ResponseEntity.ok("Signup successful");
