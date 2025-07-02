@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
 import com.dnr.erp.modules.auth.service.AuthService;
 
@@ -28,12 +29,13 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginRequestDto request) {
-		boolean success = authService.Login(request);
-		if (success) {
-			return ResponseEntity.ok("Login successful");
+	public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
+		AuthResponseDto response = authService.login(request);
+		if (response != null) {
+			return ResponseEntity.ok(response);
 		} else {
 			return ResponseEntity.status(401).body("Invalid email or password");
 		}
 	}
+
 }
