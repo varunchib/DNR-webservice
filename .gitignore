@@ -1,3 +1,67 @@
+# === Java ===
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# === Maven ===
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# === Gradle (if using) ===
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.gradle-cache/
+*.kts
+
+# === IDEs ===
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Application Config ===
+*.env
+.env.*
+application-*.yml
+application-*.properties
+application-local.yml
+application-local.properties
+
+# === Logs and Temp Files ===
+logs/
+*.log
+*.tmp
+*.bak
+*.swp
+
+# === Database ===
+*.h2.db
+*.mv.db
+*.sqlite
+*.sql
+
+# === Docker (optional) ===
+/docker-data/
+*.pid
+
+# === Others ===
+*.orig
+
 # Logs
 logs
 *.log
