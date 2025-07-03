@@ -2,10 +2,14 @@ package com.dnr.erp.modules.auth.service;
 
 import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
+import com.dnr.erp.common.dto.SignUpRequestDto;
 import com.dnr.erp.common.security.JwtUtil;
 import com.dnr.erp.modules.auth.entity.User;
 import com.dnr.erp.modules.auth.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +24,42 @@ public class AuthService {
 		this.userRepository = userRepository;
 		this.jwtUtil = jwtUtil;
 	}
+	
+	public void setTokenCookie(HttpServletResponse response, String token) {
+	    ResponseCookie cookie = ResponseCookie.from("token", token)
+	        .httpOnly(true)
+	        .secure(true) // only in HTTPS (disable for localhost dev if needed)
+	        .sameSite("Strict")
+	        .path("/")
+	        .maxAge(3600) // 1 hour
+	        .build();
+
+	    response.addHeader("Set-Cookie", cookie.toString());
+	}
 
 	public AuthResponseDto login(LoginRequestDto request) {
 		return userRepository.findByEmail(request.getEmail())
 			.filter(user -> user.getPassword().equals(request.getPassword()))
 			.map(user -> {
 				String token = jwtUtil.generateToken(user.getEmail()); // email as subject
-				return new AuthResponseDto(token, user.getEmail());
+				return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole());
 			})
 			.orElse(null);
+	}
+	
+	public ResponseEntity<String> signup(SignUpRequestDto request) {
+		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+			return ResponseEntity.status(409).body("Email already in use");
+		}
+		
+		User user = new User();
+		user.setEmail(request.getEmail());
+		user.setPassword(request.getPassword());
+		user.setFullName(request.getFullName());
+		user.setRole(request.getRole());
+		user.setEmployeeId(request.getEmployeeId());
+		
+		userRepository.save(user);		
+		return ResponseEntity.ok("Signup successful");
 	}
 }
