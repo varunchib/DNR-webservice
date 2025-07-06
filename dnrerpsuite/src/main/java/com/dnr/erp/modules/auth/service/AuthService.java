@@ -41,7 +41,7 @@ public class AuthService {
 		return userRepository.findByEmail(request.getEmail())
 			.filter(user -> user.getPassword().equals(request.getPassword()))
 			.map(user -> {
-				String token = jwtUtil.generateToken(user.getEmail()); // email as subject
+				String token = jwtUtil.generateToken(user.getId()); // email as subject
 				return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole());
 			})
 			.orElse(null);

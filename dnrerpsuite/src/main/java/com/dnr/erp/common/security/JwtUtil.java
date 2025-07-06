@@ -1,43 +1,38 @@
 package com.dnr.erp.common.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "LoremIpsumDolorInsetLoremIpsumDolorInset"; // at least 256-bit (32+ chars)
-    private static final long EXPIRATION_TIME_MS = 60 * 60 * 1000; // 1 hour
+    private static final String SECRET = "supersecretkeyvalueforjwtmustbeminimum32characters";
+    private static final long EXPIRATION_MS = 3600000; // 1 hour
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private Key getKey() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(UUID userId) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(userId.toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+    public UUID validateAndExtractUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    public boolean validateToken(String token, String email) {
-        String extracted = extractEmail(token);
-        return extracted.equals(email);
+                .getBody();
+        return UUID.fromString(claims.getSubject());
     }
 }
