@@ -3,66 +3,66 @@ package com.dnr.erp.modules.quotation.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "quotations", schema = "dnrcore")
-@Getter @Setter
-public class Quotation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+@Builder
+public class Quotation {
+
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @Column(columnDefinition = "UUID")
+    private UUID id;
+
+    @Column(name = "reference_no")
+    private String referenceNo;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(name = "attention")
+    private String attention;
+
+    @Column(name = "designation")
+    private String designation;
+
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "email_body", columnDefinition = "TEXT")
-    private String emailBody;
+    @Column(name = "phone")
+    private String phone;
 
-    @Column(name = "columns_json", columnDefinition = "TEXT")
-    private String columnsJson;
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "table_data_json", columnDefinition = "TEXT")
-    private String tableDataJson;
+    @Column(name = "website")
+    private String website;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "subject")
+    private String subject;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(name = "project")
+    private String project;
 
-	public String getEmail() {
-		return email;
-	}
+    @Column(name = "table_data")
+    private String tableData; // If you're storing raw JSON as text
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @Column(name = "created_by", columnDefinition = "UUID")
+    private UUID createdBy;
 
-	public String getEmailBody() {
-		return emailBody;
-	}
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-	public void setEmailBody(String emailBody) {
-		this.emailBody = emailBody;
-	}
+    @Column(name = "pdf_url")
+    private String pdfUrl;
 
-	public String getColumnsJson() {
-		return columnsJson;
-	}
-
-	public void setColumnsJson(String columnsJson) {
-		this.columnsJson = columnsJson;
-	}
-
-	public String getTableDataJson() {
-		return tableDataJson;
-	}
-
-	public void setTableDataJson(String tableDataJson) {
-		this.tableDataJson = tableDataJson;
-	}
-
-    
+    @Column(name = "status")
+    private String status;
 }
