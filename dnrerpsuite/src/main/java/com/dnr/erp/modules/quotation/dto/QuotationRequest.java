@@ -19,9 +19,6 @@ public class QuotationRequest {
     private String project;
     private List<Map<String, Object>> columns;
     private List<Map<String, Object>> rows;
-    private UUID createdBy;
-    private String role;
-
     
     public QuotationRequest() {}
 
@@ -154,26 +151,5 @@ public class QuotationRequest {
 	public void setRows(List<Map<String, Object>> rows) {
 		this.rows = rows;
 	}
-
-
-	public UUID getCreatedBy() {
-		return createdBy;
-	}
-
-
-	public void setCreatedBy(UUID createdBy) {
-		this.createdBy = createdBy;
-	}
-
-
-	public String getRole() {
-		return role;
-	}
-
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
     
 }

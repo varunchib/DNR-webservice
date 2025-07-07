@@ -18,13 +18,23 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(UUID userId) {
+    public String generateToken(UUID userId, Role role) {
         return Jwts.builder()
                 .setSubject(userId.toString())
+                .claim("role", role.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+    
+    public Role extractUserRole(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Role.valueOf(claims.get("role", String.class));
     }
 
     public UUID validateAndExtractUserId(String token) {
@@ -35,4 +45,17 @@ public class JwtUtil {
                 .getBody();
         return UUID.fromString(claims.getSubject());
     }
+    
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
 }

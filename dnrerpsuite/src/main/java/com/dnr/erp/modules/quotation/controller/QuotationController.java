@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,7 @@ public class QuotationController {
         this.service = service;
     }
     
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<JsonNode> createQuotation(@RequestBody QuotationRequest request) {
         JsonNode result = service.createQuotation(request);

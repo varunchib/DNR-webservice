@@ -2,7 +2,11 @@ package com.dnr.erp.modules.auth.entity;
 
 import java.util.UUID;
 
+import com.dnr.erp.common.security.Role;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,7 +21,9 @@ public class User {
 	private String email;
 	private String password;
     private String fullName;
-    private String role;
+    
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String employeeId;
 	
 	public UUID getId() {
@@ -44,10 +50,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRole() {
+	
+	public Role getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 	public String getEmployeeId() {
@@ -56,12 +63,6 @@ public class User {
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 }

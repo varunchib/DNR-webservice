@@ -4,6 +4,7 @@ import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
 import com.dnr.erp.common.dto.SignUpRequestDto;
 import com.dnr.erp.common.security.JwtUtil;
+import com.dnr.erp.common.security.Role;
 import com.dnr.erp.modules.auth.entity.User;
 import com.dnr.erp.modules.auth.repository.UserRepository;
 
@@ -41,8 +42,8 @@ public class AuthService {
 		return userRepository.findByEmail(request.getEmail())
 			.filter(user -> user.getPassword().equals(request.getPassword()))
 			.map(user -> {
-				String token = jwtUtil.generateToken(user.getId()); // email as subject
-				return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole());
+				String token = jwtUtil.generateToken(user.getId(), user.getRole()); // email as subject
+				return new AuthResponseDto(token, user.getEmail(), user.getFullName(), user.getRole().name());
 			})
 			.orElse(null);
 	}
@@ -56,7 +57,7 @@ public class AuthService {
 		user.setEmail(request.getEmail());
 		user.setPassword(request.getPassword());
 		user.setFullName(request.getFullName());
-		user.setRole(request.getRole());
+		user.setRole(Role.valueOf(request.getRole()));
 		user.setEmployeeId(request.getEmployeeId());
 		
 		userRepository.save(user);		

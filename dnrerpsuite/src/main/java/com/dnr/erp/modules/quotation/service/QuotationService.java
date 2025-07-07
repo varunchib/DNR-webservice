@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +39,19 @@ public class QuotationService {
 
         throw new RuntimeException("Invalid user context");
     }
+    
+    public String getLoggedInUserRole() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities() != null) {
+            return auth.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst() // Assume one role
+                    .map(role -> role.replace("ROLE_", ""))
+                    .orElse(null);
+        }
+        throw new RuntimeException("Role not found");
+    }
+
 
 
     public JsonNode getQuotations(QuotationFilterRequest request) {
@@ -53,15 +67,8 @@ public class QuotationService {
     }
 
     public JsonNode createQuotation(QuotationRequest request) {
-        if (request.getRole() == null || !request.getRole().equalsIgnoreCase("ADMIN")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only ADMINs can generate quotations.");
-        }
         
         UUID userId = getLoggedInUserId();
-
-        if (request.getCreatedBy() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "createdBy (UUID) is required.");
-        }
 
         try {
             Map<String, Object> params = new HashMap<>();
