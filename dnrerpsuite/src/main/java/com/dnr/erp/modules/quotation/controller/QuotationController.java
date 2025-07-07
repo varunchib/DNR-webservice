@@ -5,6 +5,8 @@ import com.dnr.erp.modules.quotation.dto.QuotationRequest;
 import com.dnr.erp.modules.quotation.service.QuotationService;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,4 +47,11 @@ public class QuotationController {
     public ResponseEntity<JsonNode> getByUser(@RequestBody QuotationFilterRequest request) {
         return ResponseEntity.ok(service.getQuotations(request));
     }
+    
+    @GetMapping("/{id}/pdf")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<byte[]> downloadPdf(@PathVariable UUID id) {
+      return null;
+    }
+
 }

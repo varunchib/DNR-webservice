@@ -29,7 +29,7 @@ public class AuthService {
 	public void setTokenCookie(HttpServletResponse response, String token) {
 	    ResponseCookie cookie = ResponseCookie.from("token", token)
 	        .httpOnly(true)
-	        .secure(true) // only in HTTPS (disable for localhost dev if needed)
+	        .secure(false) // only in HTTPS (disable for localhost dev if needed)
 	        .sameSite("Strict")
 	        .path("/")
 	        .maxAge(3600) // 1 hour
@@ -51,6 +51,10 @@ public class AuthService {
 	public ResponseEntity<String> signup(SignUpRequestDto request) {
 		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
 			return ResponseEntity.status(409).body("Email already in use");
+		}
+		
+		if (userRepository.existsByEmployeeId(request.getEmployeeId())) {
+			return ResponseEntity.status(409).body("Employee ID already in use");
 		}
 		
 		User user = new User();

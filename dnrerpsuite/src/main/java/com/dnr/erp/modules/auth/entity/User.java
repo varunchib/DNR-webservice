@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.dnr.erp.common.security.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,12 +19,15 @@ public class User {
 	@GeneratedValue
 	private UUID id;
 	
+	@Column(unique = true, nullable = false)
 	private String email;
 	private String password;
     private String fullName;
     
     @Enumerated(EnumType.STRING)
     private Role role;
+    
+    @Column(unique = true, nullable = false)
     private String employeeId;
 	
 	public UUID getId() {
