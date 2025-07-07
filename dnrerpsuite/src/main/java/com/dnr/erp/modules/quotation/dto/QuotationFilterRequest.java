@@ -45,7 +45,5 @@ public class QuotationFilterRequest {
 	public void setQuotationId(UUID quotationId) {
 		this.quotationId = quotationId;
 	}
-    
-    
-    
+        
 }

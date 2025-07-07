@@ -8,19 +8,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.dnr.erp.common.security.Role;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -59,12 +62,14 @@ public class SecurityConfig {
                     String token = authHeader.substring(7);
                     try {
                         UUID userId = jwtUtil.validateAndExtractUserId(token);
+                        Role role = jwtUtil.extractUserRole(token);
+                        var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
                         var authentication = new UsernamePasswordAuthenticationToken(
-                                userId.toString(), null, Collections.emptyList());
+                                userId.toString(), null, authorities);
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (Exception ex) {
-                        // log token error if needed
+                    	System.err.println("❌ Invalid JWT: " + ex.getMessage());
                     }
                 }
                 chain.doFilter(request, response);
