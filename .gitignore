@@ -52,8 +52,8 @@ logs/
 # === Database ===
 *.h2.db
 *.mv.db
-*.sqlite
-*.sql
+# *.sqlite
+# *.sql
 
 # === Docker (optional) ===
 /docker-data/
