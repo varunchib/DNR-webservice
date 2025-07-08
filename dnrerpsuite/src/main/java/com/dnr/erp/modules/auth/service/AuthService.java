@@ -37,6 +37,18 @@ public class AuthService {
 
 	    response.addHeader("Set-Cookie", cookie.toString());
 	}
+	
+	public void clearTokenCookie(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+            .httpOnly(true)
+            .secure(false)
+            .sameSite("Strict")
+            .path("/")
+            .maxAge(0)
+            .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+    }
 
 	public AuthResponseDto login(LoginRequestDto request) {
 		return userRepository.findByEmail(request.getEmail())
