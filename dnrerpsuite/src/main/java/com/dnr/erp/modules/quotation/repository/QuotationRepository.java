@@ -39,6 +39,7 @@ public class QuotationRepository {
     public ResponseEntity<?> callCreateQuotationProcedure(
             String referenceNo,
             java.sql.Date date,
+            java.sql.Date expirationAt,
             String companyName,
             String attention,
             String designation,
@@ -50,12 +51,14 @@ public class QuotationRepository {
             String project,
             String columnsJson,
             String rowsJson,
-            UUID createdBy
+            UUID createdBy,
+            String authorName
     ) {
         StoredProcedureQuery query = entityManager.createStoredProcedureQuery("dnrcore.prr_create_quotation");
 
         query.registerStoredProcedureParameter("p_i_reference_no", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_date", java.sql.Date.class, jakarta.persistence.ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_i_expiration_at", java.sql.Date.class, jakarta.persistence.ParameterMode.IN); // NEW
         query.registerStoredProcedureParameter("p_i_company_name", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_attention", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_designation", String.class, jakarta.persistence.ParameterMode.IN);
@@ -68,11 +71,13 @@ public class QuotationRepository {
         query.registerStoredProcedureParameter("p_i_columns", String.class, jakarta.persistence.ParameterMode.IN); // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_rows", String.class, jakarta.persistence.ParameterMode.IN);    // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_created_by", UUID.class, jakarta.persistence.ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_i_author_name", String.class, jakarta.persistence.ParameterMode.IN); // NEW
         query.registerStoredProcedureParameter("p_json_result", String.class, jakarta.persistence.ParameterMode.OUT);
 
         // Set parameters
         query.setParameter("p_i_reference_no", referenceNo);
         query.setParameter("p_i_date", date);
+        query.setParameter("p_i_expiration_at", expirationAt);
         query.setParameter("p_i_company_name", companyName);
         query.setParameter("p_i_attention", attention);
         query.setParameter("p_i_designation", designation);
@@ -85,6 +90,7 @@ public class QuotationRepository {
         query.setParameter("p_i_columns", columnsJson);
         query.setParameter("p_i_rows", rowsJson);
         query.setParameter("p_i_created_by", createdBy);
+        query.setParameter("p_i_author_name", authorName);
 
         query.execute();
         String jsonResult = (String) query.getOutputParameterValue("p_json_result");

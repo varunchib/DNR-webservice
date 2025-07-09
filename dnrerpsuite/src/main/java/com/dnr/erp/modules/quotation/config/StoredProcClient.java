@@ -44,6 +44,7 @@ public class StoredProcClient {
                         new SqlParameter("p_i_reference_no", Types.VARCHAR),
                         new SqlParameter("p_i_status", Types.VARCHAR),
                         new SqlParameter("p_i_created_by", Types.OTHER), // UUID
+                        new SqlParameter("p_i_author_name", Types.VARCHAR),
                         new SqlParameter("p_i_quotation_id", Types.OTHER) // UUID
                     );
 
@@ -73,6 +74,7 @@ public class StoredProcClient {
                         // Input parameters with explicit types
                         new SqlParameter("p_i_reference_no", Types.VARCHAR),
                         new SqlParameter("p_i_date", Types.DATE),
+                        new SqlParameter("p_i_expiration_at", Types.DATE),
                         new SqlParameter("p_i_company_name", Types.VARCHAR),
                         new SqlParameter("p_i_attention", Types.VARCHAR),
                         new SqlParameter("p_i_designation", Types.VARCHAR),
@@ -89,6 +91,7 @@ public class StoredProcClient {
                         
                         // UUID parameter
                         new SqlParameter("p_i_created_by", Types.OTHER),
+                        new SqlParameter("p_i_author_name", Types.VARCHAR),
                         new SqlOutParameter("p_json_result", Types.OTHER)
                     );
 

@@ -3,12 +3,14 @@ package com.dnr.erp.modules.quotation.dto;
 import java.util.UUID;
 
 public class QuotationFilterRequest {
-    public Integer page = 0;
-    public Integer size = 5;
-    public String referenceNo;
-    public String status;
-    public UUID createdBy;
-    public UUID quotationId;
+    private Integer page = 0;
+    private Integer size = 5;
+    private String referenceNo;
+    private String status;
+    private UUID createdBy;
+    private UUID quotationId;
+    private String authorName;
+    
 	public Integer getPage() {
 		return page;
 	}
@@ -45,5 +47,13 @@ public class QuotationFilterRequest {
 	public void setQuotationId(UUID quotationId) {
 		this.quotationId = quotationId;
 	}
+	public String getAuthorName() {
+		return authorName;
+	}
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+	
+	
         
 }

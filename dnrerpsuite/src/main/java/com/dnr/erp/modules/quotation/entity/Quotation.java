@@ -23,6 +23,9 @@ public class Quotation {
 
     @Column(name = "date")
     private LocalDate date;
+    
+    @Column(name = "expiration_at")
+    private LocalDate expirationAt;
 
     @Column(name = "company_name")
     private String companyName;
@@ -56,6 +59,9 @@ public class Quotation {
 
     @Column(name = "created_by", columnDefinition = "UUID")
     private UUID createdBy;
+    
+    @Column(name = "author_name")
+    private String authorName;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -88,6 +94,14 @@ public class Quotation {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public LocalDate getExpiredAt() {
+		return expirationAt;
+	}
+
+	public void setExpiredAt(LocalDate expirationAt) {
+		this.expirationAt = expirationAt;
 	}
 
 	public String getCompanyName() {
@@ -178,6 +192,14 @@ public class Quotation {
 		this.createdBy = createdBy;
 	}
 
+	public String getAuthorName() {
+		return authorName;
+	}
+
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -200,8 +222,7 @@ public class Quotation {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-    
+	} 
     
     
     
