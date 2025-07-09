@@ -19,9 +19,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.dnr.erp.common.security.Role;
+import com.dnr.erp.common.security.UserPrincipal;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @EnableMethodSecurity
@@ -61,21 +63,50 @@ public class SecurityConfig {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
                     throws ServletException, IOException {
+
+                String token = null;
+
+                // Authorization
                 String authHeader = request.getHeader("Authorization");
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    String token = authHeader.substring(7);
+                    token = authHeader.substring(7);
+                }
+
+                // Fallback to cookie
+                if (token == null && request.getCookies() != null) {
+                    for (var cookie : request.getCookies()) {
+                        if ("token".equals(cookie.getName())) {
+                            token = cookie.getValue();
+                            break;
+                        }
+                    }
+                }
+
+                if (token != null) {
                     try {
+                        var claims = jwtUtil.parseAllClaims(token);
+
                         UUID userId = jwtUtil.validateAndExtractUserId(token);
                         Role role = jwtUtil.extractUserRole(token);
+                        String email = claims.get("email", String.class);
+                        String name = claims.get("name", String.class);
+
                         var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+                        var principal = new UserPrincipal(userId, email, name, role); // ✅ full object
+
                         var authentication = new UsernamePasswordAuthenticationToken(
-                                userId.toString(), null, authorities);
+                                principal, // ✅ full UserPrincipal, not String
+                                null,
+                                authorities
+                        );
+
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (Exception ex) {
-                    	System.err.println("❌ Invalid JWT: " + ex.getMessage());
+                        System.err.println("❌ Invalid JWT: " + ex.getMessage());
                     }
                 }
+
                 chain.doFilter(request, response);
             }
         };
