@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
 import com.dnr.erp.common.dto.SignUpRequestDto;
+import com.dnr.erp.common.security.UserPrincipal;
 import com.dnr.erp.modules.auth.service.AuthService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,10 +40,18 @@ public class AuthController {
 	        ));
 	    }
 
+	    UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+	    Map<String, Object> userData = Map.of(
+	        "id", principal.getUserId(),
+	        "email", principal.getEmail(),
+	        "fullName", principal.getName(),
+	        "role", principal.getRole().name()
+	    );
+
 	    return ResponseEntity.ok(Map.of(
-	        "message", "Authorized"
-//	        "userId", authentication.getPrincipal(),
-//	        "roles", authentication.getAuthorities()
+	        "message", "Authorized",
+	        "user", userData
 	    ));
 	}
 	
@@ -63,8 +72,8 @@ public class AuthController {
 	}
 	
 	@PostMapping("/logout")
-	public ResponseEntity<String> logout(HttpServletResponse reponse) {
-		authService.clearTokenCookie(reponse);
+	public ResponseEntity<String> logout(HttpServletResponse response) {
+		authService.clearTokenCookie(response);
 		return ResponseEntity.ok("Logged out");
 	}	
 
