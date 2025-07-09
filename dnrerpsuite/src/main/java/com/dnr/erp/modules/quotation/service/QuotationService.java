@@ -5,13 +5,10 @@ import com.dnr.erp.modules.quotation.dto.QuotationFilterRequest;
 import com.dnr.erp.modules.quotation.dto.QuotationRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,17 +25,16 @@ public class QuotationService {
     
     public UUID getLoggedInUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof String userIdStr) {
+        if (auth != null && auth.isAuthenticated()) {
             try {
-                return UUID.fromString(userIdStr);
+                return UUID.fromString(auth.getName()); // ← safest way if principal is not directly a UUID
             } catch (IllegalArgumentException ex) {
-                throw new RuntimeException("Invalid userId in principal");
+                throw new RuntimeException("User ID (name) is not a valid UUID");
             }
         }
-
         throw new RuntimeException("Invalid user context");
     }
+
     
     public String getLoggedInUserRole() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,8 +47,14 @@ public class QuotationService {
         }
         throw new RuntimeException("Role not found");
     }
-
-
+    
+    public String getLoggedInUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            return auth.getName(); // ⬅️ typically returns username/email
+        }
+        throw new RuntimeException("Username not found in context");
+    }
 
     public JsonNode getQuotations(QuotationFilterRequest request) {
         Map<String, Object> params = new HashMap<>();
@@ -62,6 +64,7 @@ public class QuotationService {
         params.put("p_i_status", request.getStatus());
         params.put("p_i_created_by", request.getCreatedBy());
         params.put("p_i_quotation_id", request.getQuotationId());
+        params.put("p_i_author_name", request.getAuthorName());
 
         return procClient.callPaginatedProc("prr_get_paginated_quotations", params);
     }
@@ -69,6 +72,7 @@ public class QuotationService {
     public JsonNode createQuotation(QuotationRequest request) {
         
         UUID userId = getLoggedInUserId();
+        String username = getLoggedInUsername();
 
         try {
             Map<String, Object> params = new HashMap<>();
@@ -76,6 +80,7 @@ public class QuotationService {
 
             params.put("p_i_reference_no", safe(request.getReferenceNo()));
             params.put("p_i_date", new java.sql.Date(request.getDate().getTime()));
+            params.put("p_i_expiration_at", new java.sql.Date(request.getExpirationAt().getTime()));            
             params.put("p_i_company_name", safe(request.getCompanyName()));
             params.put("p_i_attention", safe(request.getAttention()));
             params.put("p_i_designation", safe(request.getDesignation()));
@@ -88,6 +93,7 @@ public class QuotationService {
             params.put("p_i_columns", mapper.writeValueAsString(request.getColumns())); // ✅ JSON -> string
             params.put("p_i_rows", mapper.writeValueAsString(request.getRows()));  
             params.put("p_i_created_by", userId);
+            params.put("p_i_author_name", username);
 
             return procClient.callCreateQuotationProc("prr_create_quotation", params);
 

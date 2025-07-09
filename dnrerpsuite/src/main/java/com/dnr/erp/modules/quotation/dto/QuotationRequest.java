@@ -6,6 +6,7 @@ import java.util.List;
 public class QuotationRequest {
     private String referenceNo;
     private Date date;
+    private Date expirationAt;
     private String companyName;
     private String attention;
     private String designation;
@@ -15,6 +16,7 @@ public class QuotationRequest {
     private String website;
     private String subject;
     private String project;
+    private String authorName;
     private List<ColumnDto> columns;
     private List<RowDto> rows;
     
@@ -34,6 +36,14 @@ public class QuotationRequest {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Date getExpirationAt() {
+		return expirationAt;
+	}
+
+	public void setExpiredAt(Date expirationAt) {
+		this.expirationAt = expirationAt;
 	}
 
 	public String getCompanyName() {
@@ -108,6 +118,14 @@ public class QuotationRequest {
 		this.project = project;
 	}
 
+	public String getAuthorName() {
+		return authorName;
+	}
+
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+
 	public List<ColumnDto> getColumns() {
 		return columns;
 	}
@@ -123,10 +141,8 @@ public class QuotationRequest {
 	public void setRows(List<RowDto> rows) {
 		this.rows = rows;
 	}
-    
-    
 
-
+	
 	
     
 }
