@@ -30,6 +30,14 @@ public class QuotationController {
         JsonNode result = service.createQuotation(request);
         return ResponseEntity.ok(result);
     }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/edit")
+    public ResponseEntity<JsonNode> editQuotation(@RequestBody QuotationRequest request) {
+        request.setFlag("E");
+        JsonNode result = service.createQuotation(request);
+        return ResponseEntity.ok(result);
+    }
 
     // 1. Get paginated quotations (no filters required)
     @PostMapping("/paginated")
