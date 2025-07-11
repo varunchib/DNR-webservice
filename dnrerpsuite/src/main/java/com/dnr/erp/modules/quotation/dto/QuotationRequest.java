@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class QuotationRequest {
+	private String flag = "N";
     private String referenceNo;
     private Date date;
     private Date expirationAt;
@@ -21,6 +22,19 @@ public class QuotationRequest {
     private List<RowDto> rows;
     
     public QuotationRequest() {}
+    
+    
+
+	public String getFlag() {
+		return flag;
+	}
+
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+
 
 	public String getReferenceNo() {
 		return referenceNo;
@@ -38,13 +52,19 @@ public class QuotationRequest {
 		this.date = date;
 	}
 
+	
+
 	public Date getExpirationAt() {
 		return expirationAt;
 	}
 
-	public void setExpiredAt(Date expirationAt) {
+
+
+	public void setExpirationAt(Date expirationAt) {
 		this.expirationAt = expirationAt;
 	}
+
+
 
 	public String getCompanyName() {
 		return companyName;

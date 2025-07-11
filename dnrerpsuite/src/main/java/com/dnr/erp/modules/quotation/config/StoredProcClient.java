@@ -72,6 +72,7 @@ public class StoredProcClient {
                         
                         
                         // Input parameters with explicit types
+                    	new SqlParameter("p_i_flag", Types.VARCHAR),
                         new SqlParameter("p_i_reference_no", Types.VARCHAR),
                         new SqlParameter("p_i_date", Types.DATE),
                         new SqlParameter("p_i_expiration_at", Types.DATE),
