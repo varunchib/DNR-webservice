@@ -1,5 +1,6 @@
 package com.dnr.erp.modules.quotation.service;
 
+import com.dnr.erp.common.security.UserPrincipal;
 import com.dnr.erp.modules.quotation.config.StoredProcClient;
 import com.dnr.erp.modules.quotation.dto.QuotationFilterRequest;
 import com.dnr.erp.modules.quotation.dto.QuotationRequest;
@@ -51,10 +52,14 @@ public class QuotationService {
     public String getLoggedInUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
-            return auth.getName(); // ⬅️ typically returns username/email
+            Object principal = auth.getPrincipal();
+            if (principal instanceof UserPrincipal userPrincipal) {
+                return userPrincipal.getName(); // ✅ full name from token
+            }
         }
         throw new RuntimeException("Username not found in context");
     }
+
 
     public JsonNode getQuotations(QuotationFilterRequest request) {
         Map<String, Object> params = new HashMap<>();
