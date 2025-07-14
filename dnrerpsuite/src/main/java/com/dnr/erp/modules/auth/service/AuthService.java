@@ -29,8 +29,8 @@ public class AuthService {
 	public void setTokenCookie(HttpServletResponse response, String token) {
 	    ResponseCookie cookie = ResponseCookie.from("token", token)
 	        .httpOnly(true)
-	        .secure(false) // only in HTTPS (disable for localhost dev if needed)
-	        .sameSite("Strict")
+	        .secure(true) // only in HTTPS (disable for localhost dev if needed)
+	        .sameSite("None")
 	        .path("/")
 	        .maxAge(3600) // 1 hour
 	        .build();
@@ -41,8 +41,8 @@ public class AuthService {
 	public void clearTokenCookie(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("token", "")
             .httpOnly(true)
-            .secure(false)
-            .sameSite("Strict")
+            .secure(true)
+            .sameSite("None")
             .path("/")
             .maxAge(0)
             .build();

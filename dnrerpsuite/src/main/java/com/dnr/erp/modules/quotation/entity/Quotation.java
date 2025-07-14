@@ -7,10 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "quotations", schema = "dnrcore")
 
-@Builder
 public class Quotation {
 
     @Id
@@ -18,16 +19,16 @@ public class Quotation {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
+    @JsonProperty("reference_no")
     @Column(name = "reference_no")
     private String referenceNo;
 
-    @Column(name = "date")
     private LocalDate date;
     
-    @Column(name = "expiration_at")
+    @JsonProperty("expiration_at")
     private LocalDate expirationAt;
 
-    @Column(name = "company_name")
+    @JsonProperty("company_name")
     private String companyName;
 
     @Column(name = "attention")
@@ -57,20 +58,28 @@ public class Quotation {
     @Column(name = "table_data")
     private String tableData; 
 
-    @Column(name = "created_by", columnDefinition = "UUID")
+    @JsonProperty("created_by")
     private UUID createdBy;
     
-    @Column(name = "author_name")
+    @JsonProperty("author_name")
     private String authorName;
 
-    @Column(name = "created_at")
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "pdf_url")
+    @JsonProperty("pdf_url")
     private String pdfUrl;
 
     @Column(name = "status")
     private String status;
+    
+    @JsonProperty("doc_version")
+    private String docVersion;
+
+    
+    public Quotation() {
+     
+    }
 
 	public UUID getId() {
 		return id;
@@ -222,8 +231,17 @@ public class Quotation {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getDocVersion() {
+		return docVersion;
+	}
+
+	public void setDocVersion(String docVersion) {
+		this.docVersion = docVersion;
 	} 
     
+	
     
     
 }

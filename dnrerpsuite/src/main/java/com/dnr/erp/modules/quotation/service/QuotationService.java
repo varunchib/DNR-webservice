@@ -2,16 +2,26 @@ package com.dnr.erp.modules.quotation.service;
 
 import com.dnr.erp.common.security.UserPrincipal;
 import com.dnr.erp.modules.quotation.config.StoredProcClient;
+import com.dnr.erp.modules.quotation.dto.ColumnDto;
 import com.dnr.erp.modules.quotation.dto.QuotationFilterRequest;
 import com.dnr.erp.modules.quotation.dto.QuotationRequest;
+import com.dnr.erp.modules.quotation.dto.RowDto;
+import com.dnr.erp.modules.quotation.entity.Quotation;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lowagie.text.DocumentException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -111,6 +121,59 @@ public class QuotationService {
     private String safe(String input) {
         return input != null ? input : "";
     }
+    
+    public record PdfDataResult(Quotation quotation, List<ColumnDto> columns, List<RowDto> rows) {}
+    
+    public PdfDataResult getQuotationPdfData(UUID quotationId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_i_page", 0);
+        params.put("p_i_size", 1);
+        params.put("p_i_reference_no", null);
+        params.put("p_i_status", null);
+        params.put("p_i_created_by", null);
+        params.put("p_i_author_name", null);
+        params.put("p_i_quotation_id", quotationId);
+
+        JsonNode data = procClient.callPaginatedProc("prr_get_paginated_quotations", params);
+        JsonNode content = data.get("resultContent");
+
+        if (content == null || content.get("quotation") == null) {
+            throw new RuntimeException("Quotation not found or missing content.");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+
+        Quotation quotation = mapper.convertValue(content.get("quotation"), Quotation.class);
+        List<ColumnDto> columns = mapper.convertValue(content.get("columns"), new TypeReference<>() {});
+        List<RowDto> rows = mapper.convertValue(content.get("rows"), new TypeReference<>() {});
+
+        // 🟡 Step: Convert 'cells' and build a map of rowId -> { columnId -> value }
+        List<JsonNode> cellsJson = mapper.convertValue(content.get("cells"), new TypeReference<>() {});
+        Map<String, Map<String, String>> rowCellMap = new HashMap<>();
+
+        for (JsonNode cell : cellsJson) {
+            String rowId = cell.get("row_id").asText();
+            String columnId = cell.get("column_id").asText();
+            String value = cell.get("value").asText();
+
+            rowCellMap
+                .computeIfAbsent(rowId, k -> new HashMap<>())
+                .put(columnId, value);
+        }
+
+        // 🟢 Step: Set 'cells' inside each RowDto
+        for (RowDto row : rows) {
+            String rowId = row.getId();
+            Map<String, String> cellMap = rowCellMap.getOrDefault(rowId, new HashMap<>());
+            row.setCells(cellMap);
+        }
+
+        return new PdfDataResult(quotation, columns, rows);
+    }
+
+
+
 }
 
 

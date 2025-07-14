@@ -1,14 +1,5 @@
-# Use a lightweight OpenJDK image
-FROM eclipse-temurin:21-jdk-alpine
-
-# Set the working directory inside the container
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
-
-# Copy the JAR file from your target directory into the container
-COPY target/erp-core.jar app.jar
-
-# Expose the port your Spring Boot app runs on
+COPY target/dnrerpsuite-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Define the startup command
 ENTRYPOINT ["java", "-jar", "app.jar"]

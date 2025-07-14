@@ -2,12 +2,17 @@ package com.dnr.erp.modules.quotation.controller;
 
 import com.dnr.erp.modules.quotation.dto.QuotationFilterRequest;
 import com.dnr.erp.modules.quotation.dto.QuotationRequest;
+import com.dnr.erp.modules.quotation.service.PdfService;
 import com.dnr.erp.modules.quotation.service.QuotationService;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.UUID;
+import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +24,9 @@ public class QuotationController {
 
 	@Autowired
     private QuotationService service;
+	
+	@Autowired
+	private PdfService pdfService;
 
     public QuotationController(QuotationService service) {
         this.service = service;
@@ -57,10 +65,26 @@ public class QuotationController {
         return ResponseEntity.ok(service.getQuotations(request));
     }
     
-    @GetMapping("/{id}/pdf")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<byte[]> downloadPdf(@PathVariable UUID id) {
-      return null;
+    @PostMapping("/generate-html-pdf")
+    public ResponseEntity<byte[]> generateHtmlPdf(@RequestBody Map<String, String> payload) throws IOException {
+        String html = payload.get("html");
+
+        if (html == null || html.isBlank()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        byte[] pdfBytes = pdfService.generateHtmlToPdf(html); // 🔄 use PdfService here
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline()
+                                .filename("quotation.pdf")
+                                .build()
+                                .toString())
+                .body(pdfBytes);
     }
+
+
 
 }
