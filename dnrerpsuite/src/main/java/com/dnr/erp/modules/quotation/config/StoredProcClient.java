@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Types;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class StoredProcClient {
@@ -104,6 +105,27 @@ public class StoredProcClient {
             throw new RuntimeException("Failed to call stored procedure: " + procName, ex);
         }
     }
+    
+    public JsonNode callGetQuotationWithDetails(String procName, UUID quotationId) {
+        try {
+            SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                    .withSchemaName("dnrcore")
+                    .withProcedureName(procName)
+                    .withoutProcedureColumnMetaDataAccess()
+                    .declareParameters(
+                            new SqlParameter("p_i_quotation_id", Types.OTHER), // UUID
+                            new SqlOutParameter("p_json_result", Types.OTHER)
+                    );
+
+            Map<String, Object> inParams = Map.of("p_i_quotation_id", quotationId);
+            Map<String, Object> result = call.execute(inParams);
+            return getJsonResult(procName, result);
+        } catch (Exception ex) {
+            logger.error("Error in callGetQuotationWithDetails: {}", procName, ex);
+            throw new RuntimeException("Failed to fetch quotation details for PDF", ex);
+        }
+    }
+
 
     /**
      * Extracts JSON result from the procedure call.
