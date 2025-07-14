@@ -12,7 +12,7 @@ public class RowDto {
     @JsonProperty("quotation_id")
     private String quotationId;
 
-    @JsonProperty("row_index")
+//    @JsonProperty("row_index")
     private int rowIndex;
 
     private Map<String, String> cells;
