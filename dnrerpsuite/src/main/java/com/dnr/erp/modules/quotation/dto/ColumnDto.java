@@ -8,10 +8,10 @@ public class ColumnDto {
 	private String id;
 
 
-    @JsonProperty("column_id")  
+//    @JsonProperty("column_id")  
     private String columnId;
 
-    @JsonProperty("column_name") 
+//    @JsonProperty("column_name") 
     private String columnName;
 
     private String visible;
