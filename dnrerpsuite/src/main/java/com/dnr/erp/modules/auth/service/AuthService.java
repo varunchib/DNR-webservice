@@ -3,6 +3,7 @@ package com.dnr.erp.modules.auth.service;
 import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
 import com.dnr.erp.common.dto.SignUpRequestDto;
+import com.dnr.erp.common.dto.UserSummaryDto;
 import com.dnr.erp.common.security.JwtUtil;
 import com.dnr.erp.common.security.Role;
 import com.dnr.erp.modules.auth.entity.User;
@@ -11,6 +12,14 @@ import com.dnr.erp.modules.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,4 +88,28 @@ public class AuthService {
 		userRepository.save(user);		
 		return ResponseEntity.ok("Signup successful");
 	}
+	
+	public List<Map<String, Object>> getAllUserDetailsForAdmin() {
+	    return userRepository.findAll().stream()
+	        .map(user -> {
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("fullName", user.getFullName());
+	            map.put("email", user.getEmail());
+	            map.put("employeeId", user.getEmployeeId()); // Object type
+	            map.put("role", user.getRole().name());
+	            return map;
+	        })
+	        .collect(Collectors.toList());
+	}
+	
+	public boolean deleteUserById(UUID id) {
+	    Optional<User> user = userRepository.findById(id);
+	    if (user.isPresent()) {
+	        userRepository.deleteById(id);
+	        return true;
+	    }
+	    return false;
+	}
+
+
 }
