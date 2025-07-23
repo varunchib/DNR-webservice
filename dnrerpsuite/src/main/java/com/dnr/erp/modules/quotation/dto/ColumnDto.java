@@ -16,7 +16,7 @@ public class ColumnDto {
 
     private String visible;
     
-    @JsonProperty("quotation_id")
+//    @JsonProperty("quotation_id")
     private String quotationId;   
     
 

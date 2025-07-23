@@ -1,13 +1,18 @@
 package com.dnr.erp.modules.auth.controller;
 
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +80,38 @@ public class AuthController {
 	public ResponseEntity<String> logout(HttpServletResponse response) {
 		authService.clearTokenCookie(response);
 		return ResponseEntity.ok("Logged out");
-	}	
+	}
+	
+	@PostMapping("/all-users")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getAllUsersForAdmin() {
+	    List<Map<String, Object>> users = authService.getAllUserDetailsForAdmin();
+	    return ResponseEntity.ok(users);
+	}		
+	
+	@PostMapping("/delete-user")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> request) {
+	    String idStr = request.get("id");
+
+	    if (idStr == null || idStr.isBlank()) {
+	        return ResponseEntity.badRequest().body("Missing user ID");
+	    }
+
+	    try {
+	        UUID userId = UUID.fromString(idStr);
+	        boolean deleted = authService.deleteUserById(userId);
+
+	        if (deleted) {
+	            return ResponseEntity.ok("User deleted successfully");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.badRequest().body("Invalid UUID format");
+	    }
+	}
+
 
 }
