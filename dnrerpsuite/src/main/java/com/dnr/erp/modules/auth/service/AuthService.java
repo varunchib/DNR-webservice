@@ -29,7 +29,6 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final JwtUtil jwtUtil;
 
-	@Autowired
 	public AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
 		this.userRepository = userRepository;
 		this.jwtUtil = jwtUtil;
@@ -93,6 +92,7 @@ public class AuthService {
 	    return userRepository.findAll().stream()
 	        .map(user -> {
 	            Map<String, Object> map = new HashMap<>();
+	            map.put("id", user.getId());
 	            map.put("fullName", user.getFullName());
 	            map.put("email", user.getEmail());
 	            map.put("employeeId", user.getEmployeeId()); // Object type
