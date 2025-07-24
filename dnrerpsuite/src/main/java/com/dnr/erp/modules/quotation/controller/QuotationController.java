@@ -32,14 +32,14 @@ public class QuotationController {
         this.service = service;
     }
     
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create")
     public ResponseEntity<JsonNode> createQuotation(@RequestBody QuotationRequest request) {
         JsonNode result = service.createQuotation(request);
         return ResponseEntity.ok(result);
     }
     
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/edit")
     public ResponseEntity<JsonNode> editQuotation(@RequestBody QuotationRequest request) {
         request.setFlag("E");
