@@ -1,0 +1,91 @@
+package com.dnr.erp.modules.bills.service;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import com.dnr.erp.modules.bills.dto.BillRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class BillService {
+
+    private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public BillService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public JsonNode saveOrUpdateBill(BillRequest request) {
+        return jdbcTemplate.execute((Connection con) -> {
+            try {
+                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+
+                cs.setString(1, request.getFlag());                    
+                cs.setObject(2, request.getId());                      
+                cs.setString(3, request.getInvoiceNo());                
+                cs.setDate(4, Date.valueOf(request.getInvoiceDate()));  
+                cs.setString(5, request.getCustomerName());             
+                cs.setString(6, request.getCustomerAddress());          
+                cs.setString(7, request.getContactNumber());            
+                cs.setBigDecimal(8, request.getSubtotal());             
+                cs.setBigDecimal(9, request.getGstPercent());           
+                cs.setBigDecimal(10, request.getGstAmount());           
+                cs.setBigDecimal(11, request.getTotalAmount());         
+                cs.setBigDecimal(12, request.getAmountReceived());      
+                cs.setBigDecimal(13, request.getBalanceDue());          
+                cs.setString(14, request.getPaymentMode());             
+                cs.setObject(15, request.getCreatedBy());               
+
+                cs.setObject(16, objectMapper.writeValueAsString(request.getItems()), Types.OTHER);
+
+                cs.registerOutParameter(17, Types.OTHER);
+
+                cs.execute();
+
+                Object result = cs.getObject(17); 
+                return objectMapper.readTree(result.toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return objectMapper.createObjectNode().put("error", "Bill creation failed: " + e.getMessage());
+            }
+        });
+    }
+
+
+
+    public JsonNode getBillById(UUID billId, UUID createdBy) {
+        return jdbcTemplate.execute((Connection con) -> {
+            try (CallableStatement cs = con.prepareCall("{ call dnrcore.prr_call_get_bill_details(?, ?, ?) }")) {
+                cs.setObject(1, billId);
+                if (createdBy != null) {
+                    cs.setObject(2, createdBy);
+                } else {
+                    cs.setNull(2, Types.OTHER);
+                }
+
+                cs.registerOutParameter(3, Types.OTHER); // ✅ match PostgreSQL jsonb
+
+                cs.execute();
+
+                Object result = cs.getObject(3); // ✅ fetch correctly as PGObject
+                return objectMapper.readTree(result.toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return objectMapper.createObjectNode().put("error", "Bill fetch failed: " + e.getMessage());
+            }
+        });
+    }
+
+}
