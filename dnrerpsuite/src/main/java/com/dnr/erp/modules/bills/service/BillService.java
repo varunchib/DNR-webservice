@@ -4,8 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Types;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +30,7 @@ public class BillService {
 
                 cs.setString(1, request.getFlag());                    
                 cs.setObject(2, request.getId());                      
-                cs.setString(3, request.getInvoiceNo());                
+                cs.setString(3, null);                
                 cs.setDate(4, Date.valueOf(request.getInvoiceDate()));  
                 cs.setString(5, request.getCustomerName());             
                 cs.setString(6, request.getCustomerAddress());          
@@ -74,11 +72,11 @@ public class BillService {
                     cs.setNull(2, Types.OTHER);
                 }
 
-                cs.registerOutParameter(3, Types.OTHER); // ✅ match PostgreSQL jsonb
+                cs.registerOutParameter(3, Types.OTHER); 
 
                 cs.execute();
 
-                Object result = cs.getObject(3); // ✅ fetch correctly as PGObject
+                Object result = cs.getObject(3); 
                 return objectMapper.readTree(result.toString());
 
             } catch (Exception e) {
