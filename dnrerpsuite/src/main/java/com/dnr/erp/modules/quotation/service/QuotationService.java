@@ -90,7 +90,7 @@ public class QuotationService {
             ObjectMapper mapper = new ObjectMapper();
             
             params.put("p_i_flag", safe(request.getFlag()));
-            params.put("p_i_reference_no", safe(request.getReferenceNo()));
+            params.put("p_i_reference_no", null);
             params.put("p_i_date", new java.sql.Date(request.getDate().getTime()));
             params.put("p_i_expiration_at", new java.sql.Date(request.getExpirationAt().getTime()));            
             params.put("p_i_company_name", safe(request.getCompanyName()));
