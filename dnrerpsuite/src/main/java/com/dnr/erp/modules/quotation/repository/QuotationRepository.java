@@ -56,7 +56,6 @@ public class QuotationRepository {
     ) {
         StoredProcedureQuery query = entityManager.createStoredProcedureQuery("dnrcore.prr_create_quotation");
 
-        query.registerStoredProcedureParameter("p_i_reference_no", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_date", java.sql.Date.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_expiration_at", java.sql.Date.class, jakarta.persistence.ParameterMode.IN); // NEW
         query.registerStoredProcedureParameter("p_i_company_name", String.class, jakarta.persistence.ParameterMode.IN);
@@ -74,8 +73,6 @@ public class QuotationRepository {
         query.registerStoredProcedureParameter("p_i_author_name", String.class, jakarta.persistence.ParameterMode.IN); // NEW
         query.registerStoredProcedureParameter("p_json_result", String.class, jakarta.persistence.ParameterMode.OUT);
 
-        // Set parameters
-        query.setParameter("p_i_reference_no", referenceNo);
         query.setParameter("p_i_date", date);
         query.setParameter("p_i_expiration_at", expirationAt);
         query.setParameter("p_i_company_name", companyName);
