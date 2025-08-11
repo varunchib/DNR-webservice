@@ -57,9 +57,13 @@ public class OfferLetterService {
                 .withProcedureName("prr_call_get_offer_letter")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
+                		new SqlOutParameter("p_json_result", Types.OTHER),
                         new SqlParameter("p_i_offer_letter_id", Types.OTHER),
                         new SqlParameter("p_i_created_by", Types.OTHER),
-                        new SqlOutParameter("p_json_result", Types.OTHER)
+                        new SqlParameter("p_i_status", Types.VARCHAR),
+                        new SqlParameter("p_i_page", Types.INTEGER),
+                        new SqlParameter("p_i_size", Types.INTEGER),
+                        new SqlParameter("p_i_search", Types.VARCHAR)
                 );
     }
 
@@ -85,17 +89,29 @@ public class OfferLetterService {
         }
     }
 
-    // ✅ New method to fetch offer letter details by ID
     public JsonNode getOfferLetterById(UUID offerLetterId, UUID createdBy) {
+        return fetchOfferLetters(offerLetterId, createdBy, null, null, null, null);
+    }
+
+    /** Flexible fetch: single-by-id OR paginated list with optional filters */
+    public JsonNode fetchOfferLetters(UUID offerLetterId,
+                                      UUID createdBy,
+                                      String status,
+                                      Integer page,
+                                      Integer size,
+                                      String search) {
         try {
-            Map<String, Object> inParams = new HashMap<>();
-            inParams.put("p_i_offer_letter_id", offerLetterId);
-            inParams.put("p_i_created_by", createdBy);
+            Map<String, Object> in = new HashMap<>();
+            in.put("p_i_offer_letter_id", offerLetterId);
+            in.put("p_i_created_by", createdBy);
+            in.put("p_i_status", status);
+            in.put("p_i_page", page);
+            in.put("p_i_size", size);
+            in.put("p_i_search", search);
 
-            Map<String, Object> result = getOfferProc.execute(inParams);
-            Object jsonResult = result.get("p_json_result");
-
-            return objectMapper.readTree(jsonResult.toString());
+            Map<String, Object> out = getOfferProc.execute(in);
+            Object json = out.get("p_json_result");
+            return objectMapper.readTree(json.toString());
         } catch (Exception e) {
             throw new RuntimeException("Failed to call prr_call_get_offer_letter: " + e.getMessage(), e);
         }
