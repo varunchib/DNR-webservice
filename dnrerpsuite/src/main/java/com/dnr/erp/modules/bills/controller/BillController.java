@@ -2,6 +2,7 @@ package com.dnr.erp.modules.bills.controller;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -44,8 +45,13 @@ public class BillController {
     }
 
     @PostMapping("/get")
-    public ResponseEntity<JsonNode> getBillById(@RequestBody BillRequest request) {
-        JsonNode response = billService.getBillById(request.getId(), request.getCreatedBy());
+    public ResponseEntity<JsonNode> getBills(@RequestBody Map<String, Object> body) {
+        UUID id = body.get("id") != null ? UUID.fromString(body.get("id").toString()) : null;
+        UUID createdBy = body.get("createdBy") != null ? UUID.fromString(body.get("createdBy").toString()) : null;
+        Integer page = body.get("page") != null ? Integer.valueOf(body.get("page").toString()) : null;
+        Integer size = body.get("size") != null ? Integer.valueOf(body.get("size").toString()) : null;
+
+        JsonNode response = billService.getBillsFlexible(id, createdBy, page, size);
         return ResponseEntity.ok(response);
     }
     

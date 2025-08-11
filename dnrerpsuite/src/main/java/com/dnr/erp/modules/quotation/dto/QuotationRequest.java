@@ -1,5 +1,6 @@
 package com.dnr.erp.modules.quotation.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class QuotationRequest {
     private String authorName;
     private List<ColumnDto> columns;
     private List<RowDto> rows;
+    
+    private BigDecimal vat;
     
     public QuotationRequest() {}
     
@@ -148,7 +151,13 @@ public class QuotationRequest {
 		this.rows = rows;
 	}
 
-	
-	
-    
+	public BigDecimal getVat() {
+		return vat;
+	}
+
+	public void setVat(BigDecimal vat) {
+		this.vat = vat;
+	}
+
+	    
 }

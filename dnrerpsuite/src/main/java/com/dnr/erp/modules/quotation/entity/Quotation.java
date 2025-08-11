@@ -1,16 +1,13 @@
 package com.dnr.erp.modules.quotation.entity;
 
 import jakarta.persistence.*;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 @Table(name = "quotations", schema = "dnrcore")
-
 public class Quotation {
 
     @Id
@@ -18,16 +15,16 @@ public class Quotation {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    @JsonProperty("reference_no")
     @Column(name = "reference_no")
     private String referenceNo;
 
+    @Column(name = "date")
     private LocalDate date;
-    
-    @JsonProperty("expiration_at")
+
+    @Column(name = "expiration_at")
     private LocalDate expirationAt;
 
-    @JsonProperty("company_name")
+    @Column(name = "company_name")
     private String companyName;
 
     @Column(name = "attention")
@@ -54,193 +51,170 @@ public class Quotation {
     @Column(name = "project")
     private String project;
 
+    // Optional JSON snapshot or misc data (if you use it)
     @Column(name = "table_data")
-    private String tableData; 
+    private String tableData;
 
-    @JsonProperty("created_by")
+    @Column(name = "created_by", columnDefinition = "UUID")
     private UUID createdBy;
-    
-    @JsonProperty("author_name")
+
+    @Column(name = "author_name")
     private String authorName;
 
-    @JsonProperty("created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @JsonProperty("pdf_url")
-    private String pdfUrl;
 
     @Column(name = "status")
     private String status;
-    
-    @JsonProperty("doc_version")
+
+    @Column(name = "doc_version")
     private String docVersion;
 
-    
-    public Quotation() {
-     
+    // NEW: VAT percentage/value stored for this quotation
+    @Column(name = "vat")
+    private BigDecimal vat;
+
+    /* ---------- Getters / Setters ---------- */
+
+    public Quotation() {}
+
+    public UUID getId() {
+        return id;
+    }
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-	public UUID getId() {
-		return id;
-	}
+    public String getReferenceNo() {
+        return referenceNo;
+    }
+    public void setReferenceNo(String referenceNo) {
+        this.referenceNo = referenceNo;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public LocalDate getDate() {
+        return date;
+    }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
-	public String getReferenceNo() {
-		return referenceNo;
-	}
+    public LocalDate getExpirationAt() {
+        return expirationAt;
+    }
+    public void setExpirationAt(LocalDate expirationAt) {
+        this.expirationAt = expirationAt;
+    }
 
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
-	}
+    public String getCompanyName() {
+        return companyName;
+    }
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
-	public LocalDate getDate() {
-		return date;
-	}
+    public String getAttention() {
+        return attention;
+    }
+    public void setAttention(String attention) {
+        this.attention = attention;
+    }
 
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
+    public String getDesignation() {
+        return designation;
+    }
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
 
-	public LocalDate getExpiredAt() {
-		return expirationAt;
-	}
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setExpiredAt(LocalDate expirationAt) {
-		this.expirationAt = expirationAt;
-	}
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getCompanyName() {
-		return companyName;
-	}
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
+    public String getWebsite() {
+        return website;
+    }
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
-	public String getAttention() {
-		return attention;
-	}
+    public String getSubject() {
+        return subject;
+    }
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public void setAttention(String attention) {
-		this.attention = attention;
-	}
+    public String getProject() {
+        return project;
+    }
+    public void setProject(String project) {
+        this.project = project;
+    }
 
-	public String getDesignation() {
-		return designation;
-	}
+    public String getTableData() {
+        return tableData;
+    }
+    public void setTableData(String tableData) {
+        this.tableData = tableData;
+    }
 
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(UUID createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getAuthorName() {
+        return authorName;
+    }
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getDocVersion() {
+        return docVersion;
+    }
+    public void setDocVersion(String docVersion) {
+        this.docVersion = docVersion;
+    }
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getWebsite() {
-		return website;
-	}
-
-	public void setWebsite(String website) {
-		this.website = website;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getProject() {
-		return project;
-	}
-
-	public void setProject(String project) {
-		this.project = project;
-	}
-
-	public String getTableData() {
-		return tableData;
-	}
-
-	public void setTableData(String tableData) {
-		this.tableData = tableData;
-	}
-
-	public UUID getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(UUID createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getAuthorName() {
-		return authorName;
-	}
-
-	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getPdfUrl() {
-		return pdfUrl;
-	}
-
-	public void setPdfUrl(String pdfUrl) {
-		this.pdfUrl = pdfUrl;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getDocVersion() {
-		return docVersion;
-	}
-
-	public void setDocVersion(String docVersion) {
-		this.docVersion = docVersion;
-	} 
-    
-	
-    
-    
+    public BigDecimal getVat() {
+        return vat;
+    }
+    public void setVat(BigDecimal vat) {
+        this.vat = vat;
+    }
 }
