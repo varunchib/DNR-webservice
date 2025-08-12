@@ -10,9 +10,6 @@ public class ColumnDto {
     private String columnId;
     private String columnName;
 
-    // was String; use Boolean to match DB and JSON
-    private Boolean visible;
-
     // NEW metadata
     private Boolean required;   // true/false
     private String inputType;   // "text" | "number" | "calculated"  (maps from JSON "type")
@@ -30,9 +27,6 @@ public class ColumnDto {
 
     public String getColumnName() { return columnName; }
     public void setColumnName(String columnName) { this.columnName = columnName; }
-
-    public Boolean getVisible() { return visible; }
-    public void setVisible(Boolean visible) { this.visible = visible; }
 
     public Boolean getRequired() { return required; }
     public void setRequired(Boolean required) { this.required = required; }
