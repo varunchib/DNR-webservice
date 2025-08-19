@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class OfferLetterRequest {
+	private UUID offerLetterId;
     private String employeeName;
     private String position;
     private String salary;
@@ -33,7 +34,13 @@ public class OfferLetterRequest {
         }
     }
 
-    // Getters and setters...
+    public UUID getOfferLetterId() {
+		return offerLetterId;
+	}
+	public void setOfferLetterId(UUID offerLetterId) {
+		this.offerLetterId = offerLetterId;
+	}
+	// Getters and setters...
     public String getEmployeeName() {
         return employeeName;
     }
