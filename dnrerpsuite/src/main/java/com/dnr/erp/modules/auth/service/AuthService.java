@@ -3,7 +3,6 @@ package com.dnr.erp.modules.auth.service;
 import com.dnr.erp.common.dto.AuthResponseDto;
 import com.dnr.erp.common.dto.LoginRequestDto;
 import com.dnr.erp.common.dto.SignUpRequestDto;
-import com.dnr.erp.common.dto.UserSummaryDto;
 import com.dnr.erp.common.security.JwtUtil;
 import com.dnr.erp.common.security.Role;
 import com.dnr.erp.modules.auth.entity.User;
@@ -20,7 +19,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

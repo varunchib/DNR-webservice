@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
@@ -70,8 +75,8 @@ public class OfferLetterService {
     public Map<String, Object> createOfferLetter(OfferLetterRequest request) {
         try {
             Map<String, Object> inParams = new HashMap<>();
-            inParams.put("p_i_flag", "N");
-            inParams.put("p_i_offer_letter_id", null);
+            inParams.put("p_i_flag", request.getOfferLetterId() == null ? "N" : "U");
+            inParams.put("p_i_offer_letter_id", request.getOfferLetterId());
             inParams.put("p_i_candidate_name", request.getEmployeeName());
             inParams.put("p_i_position", request.getPosition());
             inParams.put("p_i_ctc", request.getSalary());
@@ -81,9 +86,14 @@ public class OfferLetterService {
 
             Map<String, Object> result = createOfferProc.execute(inParams);
             Object jsonResult = result.get("p_json_result");
-            
+
             return objectMapper.readValue(jsonResult.toString(), Map.class);
 
+        } catch (DataIntegrityViolationException ex) {
+            if (ex.getMostSpecificCause().getMessage().contains("uq_offer_letter_candidate")) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Offer letter already exists for this candidate");
+            }
+            throw ex; // rethrow other integrity issues
         } catch (Exception e) {
             throw new RuntimeException("Failed to call prr_create_offer_letter: " + e.getMessage(), e);
         }
