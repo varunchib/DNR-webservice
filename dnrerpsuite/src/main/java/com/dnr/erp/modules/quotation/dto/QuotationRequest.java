@@ -6,6 +6,7 @@ import java.util.List;
 
 public class QuotationRequest {
 	private String flag = "N";
+	private String referenceNo;
     private Date date;
     private Date expirationAt;
     private String companyName;
@@ -31,6 +32,14 @@ public class QuotationRequest {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getReferenceNo() {
+		return referenceNo;
+	}
+
+	public void setReferenceNo(String referenceNo) {
+		this.referenceNo = referenceNo;
 	}
 
 	public Date getDate() {

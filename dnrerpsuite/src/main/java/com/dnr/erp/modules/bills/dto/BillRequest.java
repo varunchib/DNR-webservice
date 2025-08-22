@@ -13,6 +13,7 @@ public class BillRequest {
     private String customerName;
     private String customerAddress;
     private String contactNumber;
+    private String customerEmail;
     private BigDecimal subtotal;
     private BigDecimal gstPercent;
     private BigDecimal gstAmount;
@@ -64,6 +65,13 @@ public class BillRequest {
 	}
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
+	}
+	
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
 	}
 	public BigDecimal getSubtotal() {
 		return subtotal;
