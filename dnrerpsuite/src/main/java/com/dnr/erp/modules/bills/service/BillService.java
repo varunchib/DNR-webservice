@@ -24,7 +24,7 @@ public class BillService {
     public BillService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    
+
     private UUID getLoggedInUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
@@ -37,32 +37,33 @@ public class BillService {
     public JsonNode saveOrUpdateBill(BillRequest request) {
         return jdbcTemplate.execute((Connection con) -> {
             try {
-                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 
-                cs.setString(1, request.getFlag());                    
-                cs.setObject(2, request.getId());                      
-                cs.setString(3, null);                
-                cs.setDate(4, Date.valueOf(request.getInvoiceDate()));  
-                cs.setString(5, request.getCustomerName());             
-                cs.setString(6, request.getCustomerAddress());          
-                cs.setString(7, request.getContactNumber());            
-                cs.setBigDecimal(8, request.getSubtotal());             
-                cs.setBigDecimal(9, request.getGstPercent());           
-                cs.setBigDecimal(10, request.getGstAmount());           
-                cs.setBigDecimal(11, request.getTotalAmount());         
-                cs.setBigDecimal(12, request.getAmountReceived());      
-                cs.setBigDecimal(13, request.getBalanceDue());          
-                cs.setString(14, request.getPaymentMode());             
-                cs.setObject(15, getLoggedInUserId());                     // p_i_created_by
+                cs.setString(1, request.getFlag());
+                cs.setObject(2, request.getId());
+                cs.setString(3, null);
+                cs.setDate(4, Date.valueOf(request.getInvoiceDate()));
+                cs.setString(5, request.getCustomerName());
+                cs.setString(6, request.getCustomerAddress());
+                cs.setString(7, request.getContactNumber());
+                cs.setString(8, request.getCustomerEmail());
+                cs.setBigDecimal(9, request.getSubtotal());
+                cs.setBigDecimal(10, request.getGstPercent());
+                cs.setBigDecimal(11, request.getGstAmount());
+                cs.setBigDecimal(12, request.getTotalAmount());
+                cs.setBigDecimal(13, request.getAmountReceived());
+                cs.setBigDecimal(14, request.getBalanceDue());
+                cs.setString(15, request.getPaymentMode());
+                cs.setObject(16, getLoggedInUserId()); // p_i_created_by
 
                 // items JSONB
-                cs.setObject(16, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
+                cs.setObject(17, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
 
-                cs.registerOutParameter(17, Types.OTHER);                  // p_json_result
+                cs.registerOutParameter(18, Types.OTHER); // p_json_result
 
                 cs.execute();
 
-                Object result = cs.getObject(17);
+                Object result = cs.getObject(18);
                 return objectMapper.readTree(result.toString());
 
             } catch (Exception e) {
