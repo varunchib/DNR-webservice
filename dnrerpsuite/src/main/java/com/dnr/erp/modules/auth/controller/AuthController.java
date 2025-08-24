@@ -109,6 +109,37 @@ public class AuthController {
 	        return ResponseEntity.badRequest().body("Invalid UUID format");
 	    }
 	}
+	
+	@PostMapping("/edit")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<String> editPassword(@RequestBody Map<String, String> request) {
+	    String idStr = request.get("id");
+	    String newPassword = request.get("newPassword");
+
+	    if (idStr == null || idStr.isBlank()) {
+	        return ResponseEntity.badRequest().body("Missing user ID");
+	    }
+	    if (newPassword == null || newPassword.isBlank()) {
+	        return ResponseEntity.badRequest().body("Missing new password");
+	    }
+	    // (Optional) basic validation; keep or tweak as you like
+	    if (newPassword.length() < 6) {
+	        return ResponseEntity.badRequest().body("Password must be at least 6 characters");
+	    }
+
+	    try {
+	        UUID userId = UUID.fromString(idStr);
+	        boolean updated = authService.updatePasswordById(userId, newPassword);
+
+	        if (updated) {
+	            return ResponseEntity.ok("Password updated successfully");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.badRequest().body("Invalid UUID format");
+	    }
+	}
 
 
 }

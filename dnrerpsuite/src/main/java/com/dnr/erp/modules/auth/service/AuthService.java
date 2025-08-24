@@ -66,24 +66,27 @@ public class AuthService {
 			.orElse(null);
 	}
 	
+	private String generateEmployeeId() {
+	    return "DNR" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+	}
+
 	public ResponseEntity<String> signup(SignUpRequestDto request) {
-		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-			return ResponseEntity.status(409).body("Email already in use");
-		}
-		
-		if (userRepository.existsByEmployeeId(request.getEmployeeId())) {
-			return ResponseEntity.status(409).body("Employee ID already in use");
-		}
-		
-		User user = new User();
-		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
-		user.setFullName(request.getFullName());
-		user.setRole(Role.valueOf(request.getRole()));
-		user.setEmployeeId(request.getEmployeeId());
-		
-		userRepository.save(user);		
-		return ResponseEntity.ok("Signup successful");
+	    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+	        return ResponseEntity.status(409).body("Email already in use");
+	    }
+
+	    // Auto-generate employeeId
+	    String newEmployeeId = generateEmployeeId();
+
+	    User user = new User();
+	    user.setEmail(request.getEmail());
+	    user.setPassword(request.getPassword());
+	    user.setFullName(request.getFullName());
+	    user.setRole(Role.valueOf(request.getRole()));
+	    user.setEmployeeId(newEmployeeId);
+
+	    userRepository.save(user);
+	    return ResponseEntity.ok("Signup successful. Employee ID = " + newEmployeeId);
 	}
 	
 	public List<Map<String, Object>> getAllUserDetailsForAdmin() {
@@ -107,6 +110,16 @@ public class AuthService {
 	        return true;
 	    }
 	    return false;
+	}
+	
+	public boolean updatePasswordById(UUID id, String newPassword) {
+	    Optional<User> opt = userRepository.findById(id);
+	    if (opt.isEmpty()) return false;
+
+	    User user = opt.get();
+	    user.setPassword(newPassword); 
+	    userRepository.save(user);
+	    return true;
 	}
 
 
