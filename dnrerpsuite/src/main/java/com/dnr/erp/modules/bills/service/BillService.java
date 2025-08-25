@@ -37,33 +37,34 @@ public class BillService {
     public JsonNode saveOrUpdateBill(BillRequest request) {
         return jdbcTemplate.execute((Connection con) -> {
             try {
-                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 
                 cs.setString(1, request.getFlag());
                 cs.setObject(2, request.getId());
                 cs.setString(3, null);
                 cs.setDate(4, Date.valueOf(request.getInvoiceDate()));
                 cs.setString(5, request.getCustomerName());
-                cs.setString(6, request.getCustomerAddress());
-                cs.setString(7, request.getContactNumber());
-                cs.setString(8, request.getCustomerEmail());
-                cs.setBigDecimal(9, request.getSubtotal());
-                cs.setBigDecimal(10, request.getGstPercent());
-                cs.setBigDecimal(11, request.getGstAmount());
-                cs.setBigDecimal(12, request.getTotalAmount());
-                cs.setBigDecimal(13, request.getAmountReceived());
-                cs.setBigDecimal(14, request.getBalanceDue());
-                cs.setString(15, request.getPaymentMode());
-                cs.setObject(16, getLoggedInUserId()); // p_i_created_by
+                cs.setString(6, request.getCustomerCompany());
+                cs.setString(7, request.getCustomerAddress());
+                cs.setString(8, request.getContactNumber());
+                cs.setString(9, request.getCustomerEmail());
+                cs.setBigDecimal(10, request.getSubtotal());
+                cs.setBigDecimal(11, request.getGstPercent());
+                cs.setBigDecimal(12, request.getGstAmount());
+                cs.setBigDecimal(13, request.getTotalAmount());
+                cs.setBigDecimal(14, request.getAmountReceived());
+                cs.setBigDecimal(15, request.getBalanceDue());
+                cs.setString(16, request.getPaymentMode());
+                cs.setObject(17, getLoggedInUserId()); // p_i_created_by
 
                 // items JSONB
-                cs.setObject(17, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
+                cs.setObject(18, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
 
-                cs.registerOutParameter(18, Types.OTHER); // p_json_result
+                cs.registerOutParameter(19, Types.OTHER); // p_json_result
 
                 cs.execute();
 
-                Object result = cs.getObject(18);
+                Object result = cs.getObject(19);
                 return objectMapper.readTree(result.toString());
 
             } catch (Exception e) {
