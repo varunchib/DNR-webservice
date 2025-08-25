@@ -11,6 +11,7 @@ public class BillRequest {
     private String invoiceNo;
     private LocalDate invoiceDate;
     private String customerName;
+    private String customerCompany;
     private String customerAddress;
     private String contactNumber;
     private String customerEmail;
@@ -53,6 +54,13 @@ public class BillRequest {
 	}
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+	
+	public String getCustomerCompany() {
+		return customerCompany;
+	}
+	public void setCustomerCompany(String customerCompany) {
+		this.customerCompany = customerCompany;
 	}
 	public String getCustomerAddress() {
 		return customerAddress;
