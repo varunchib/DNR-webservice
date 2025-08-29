@@ -49,6 +49,7 @@ public class QuotationRepository {
             String website,
             String subject,
             String project,
+            String title,
             String columnsJson,
             String rowsJson,
             UUID createdBy,
@@ -67,6 +68,7 @@ public class QuotationRepository {
         query.registerStoredProcedureParameter("p_i_website", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_subject", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_project", String.class, jakarta.persistence.ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_i_title", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_columns", String.class, jakarta.persistence.ParameterMode.IN); // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_rows", String.class, jakarta.persistence.ParameterMode.IN);    // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_created_by", UUID.class, jakarta.persistence.ParameterMode.IN);
@@ -84,6 +86,7 @@ public class QuotationRepository {
         query.setParameter("p_i_website", website);
         query.setParameter("p_i_subject", subject);
         query.setParameter("p_i_project", project);
+        query.setParameter("p_i_title", title);
         query.setParameter("p_i_columns", columnsJson);
         query.setParameter("p_i_rows", rowsJson);
         query.setParameter("p_i_created_by", createdBy);

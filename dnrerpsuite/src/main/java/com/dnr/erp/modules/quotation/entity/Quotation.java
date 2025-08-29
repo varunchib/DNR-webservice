@@ -50,6 +50,9 @@ public class Quotation {
 
     @Column(name = "project")
     private String project;
+    
+    @Column(name = "title")
+    private String title;
 
     // Optional JSON snapshot or misc data (if you use it)
     @Column(name = "table_data")
@@ -168,8 +171,16 @@ public class Quotation {
     public void setProject(String project) {
         this.project = project;
     }
+    
+    public String getTitle() {
+		return title;
+	}
 
-    public String getTableData() {
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTableData() {
         return tableData;
     }
     public void setTableData(String tableData) {
