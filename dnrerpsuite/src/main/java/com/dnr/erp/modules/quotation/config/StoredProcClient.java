@@ -87,6 +87,8 @@ public class StoredProcClient {
                         new SqlParameter("p_i_subject", Types.VARCHAR),
                         new SqlParameter("p_i_project", Types.VARCHAR),
                         
+                        new SqlParameter("p_i_title", Types.VARCHAR),
+                        
                         new SqlParameter("p_i_vat", Types.NUMERIC),
                         // JSON parameters as TEXT
                         new SqlParameter("p_i_columns", Types.VARCHAR),

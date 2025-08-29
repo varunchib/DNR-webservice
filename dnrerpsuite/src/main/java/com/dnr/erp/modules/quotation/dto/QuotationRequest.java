@@ -18,6 +18,7 @@ public class QuotationRequest {
     private String website;
     private String subject;
     private String project;
+    private String title;
     private String authorName;
     private List<ColumnDto> columns;
     private List<RowDto> rows;
@@ -134,6 +135,14 @@ public class QuotationRequest {
 
 	public void setProject(String project) {
 		this.project = project;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getAuthorName() {
