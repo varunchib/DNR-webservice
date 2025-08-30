@@ -12,6 +12,8 @@ public class OfferLetterRequest {
     private Date joiningDate;
     private List<SalaryBreakdownItem> salaryBreakdown;
     private UUID createdBy;
+    
+    private String nationality;
 
     public static class SalaryBreakdownItem {
         private String label;
@@ -77,4 +79,6 @@ public class OfferLetterRequest {
     public void setCreatedBy(UUID createdBy) {
         this.createdBy = createdBy;
     }
+    public String getNationality() { return nationality; }
+    public void setNationality(String nationality) { this.nationality = nationality; }
 }

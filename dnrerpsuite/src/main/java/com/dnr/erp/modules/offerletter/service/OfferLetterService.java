@@ -49,6 +49,7 @@ public class OfferLetterService {
                         new SqlParameter("p_i_offer_letter_id", Types.OTHER), // UUID
                         new SqlParameter("p_i_candidate_name", Types.VARCHAR),
                         new SqlParameter("p_i_position", Types.VARCHAR),
+                        new SqlParameter("p_i_nationality", Types.VARCHAR),
                         new SqlParameter("p_i_ctc", Types.VARCHAR),
                         new SqlParameter("p_i_joining_date", Types.DATE),
                         new SqlParameter("p_i_salary_breakdown", Types.OTHER), // JSONB
@@ -79,6 +80,7 @@ public class OfferLetterService {
             inParams.put("p_i_offer_letter_id", request.getOfferLetterId());
             inParams.put("p_i_candidate_name", request.getEmployeeName());
             inParams.put("p_i_position", request.getPosition());
+            inParams.put("p_i_nationality", request.getNationality() == null ? null : request.getNationality().trim());
             inParams.put("p_i_ctc", request.getSalary());
             inParams.put("p_i_joining_date", new java.sql.Date(request.getJoiningDate().getTime()));
             inParams.put("p_i_salary_breakdown", objectMapper.writeValueAsString(request.getSalaryBreakdown()));
