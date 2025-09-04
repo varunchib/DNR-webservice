@@ -14,6 +14,7 @@ public class OfferLetterRequest {
     private UUID createdBy;
     
     private String nationality;
+    private String currencyCode;
 
     public static class SalaryBreakdownItem {
         private String label;
@@ -81,4 +82,11 @@ public class OfferLetterRequest {
     }
     public String getNationality() { return nationality; }
     public void setNationality(String nationality) { this.nationality = nationality; }
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+    
 }

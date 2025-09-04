@@ -19,11 +19,13 @@ public class QuotationRequest {
     private String subject;
     private String project;
     private String title;
+    private String currencyCode;
     private String authorName;
     private List<ColumnDto> columns;
     private List<RowDto> rows;
     
     private BigDecimal vat;
+    private List<String> scopes;
     
     public QuotationRequest() {}
     
@@ -49,21 +51,15 @@ public class QuotationRequest {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	
+	}	
 
 	public Date getExpirationAt() {
 		return expirationAt;
 	}
 
-
-
 	public void setExpirationAt(Date expirationAt) {
 		this.expirationAt = expirationAt;
 	}
-
-
 
 	public String getCompanyName() {
 		return companyName;
@@ -145,6 +141,14 @@ public class QuotationRequest {
 		this.title = title;
 	}
 
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
 	public String getAuthorName() {
 		return authorName;
 	}
@@ -177,5 +181,13 @@ public class QuotationRequest {
 		this.vat = vat;
 	}
 
-	    
+	public List<String> getScopes() {
+		return scopes;
+	}
+
+	public void setScopes(List<String> scopes) {
+		this.scopes = scopes;
+	}
+	
+		    
 }

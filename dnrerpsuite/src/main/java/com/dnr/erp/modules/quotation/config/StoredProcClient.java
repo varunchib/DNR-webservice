@@ -89,6 +89,8 @@ public class StoredProcClient {
                         
                         new SqlParameter("p_i_title", Types.VARCHAR),
                         
+                        new SqlParameter("p_i_currency_code", Types.VARCHAR),
+                        
                         new SqlParameter("p_i_vat", Types.NUMERIC),
                         // JSON parameters as TEXT
                         new SqlParameter("p_i_columns", Types.VARCHAR),
@@ -97,6 +99,7 @@ public class StoredProcClient {
                         // UUID parameter
                         new SqlParameter("p_i_created_by", Types.OTHER),
                         new SqlParameter("p_i_author_name", Types.VARCHAR),
+                        new SqlParameter("p_i_scopes", Types.VARCHAR),
                         new SqlOutParameter("p_json_result", Types.OTHER)
                     );
 
