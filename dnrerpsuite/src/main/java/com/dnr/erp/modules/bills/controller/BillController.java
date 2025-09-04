@@ -39,7 +39,7 @@ public class BillController {
 
     @PostMapping("/update")
     public ResponseEntity<JsonNode> updateBill(@RequestBody BillRequest request) {
-        request.setFlag("U");
+        request.setFlag("E");
         JsonNode response = billService.saveOrUpdateBill(request);
         return ResponseEntity.ok(response);
     }
