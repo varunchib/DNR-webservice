@@ -22,6 +22,7 @@ public class BillRequest {
     private BigDecimal amountReceived;
     private BigDecimal balanceDue;
     private String paymentMode;
+    private String currencyCode;
     private UUID createdBy;
     private List<ItemDto> items;
     
@@ -122,6 +123,13 @@ public class BillRequest {
 	}
 	public void setPaymentMode(String paymentMode) {
 		this.paymentMode = paymentMode;
+	}
+	
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
 	}
 	public UUID getCreatedBy() {
 		return createdBy;

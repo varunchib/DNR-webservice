@@ -103,9 +103,13 @@ public class QuotationService {
             params.put("p_i_subject", safe(request.getSubject()));
             params.put("p_i_project", safe(request.getProject()));
             params.put("p_i_title", safe(request.getTitle()));
+            params.put("p_i_currency_code", request.getCurrencyCode());
             params.put("p_i_vat", request.getVat());
             params.put("p_i_columns", mapper.writeValueAsString(request.getColumns())); // ✅ JSON -> string
             params.put("p_i_rows", mapper.writeValueAsString(request.getRows()));  
+            params.put("p_i_scopes", mapper.writeValueAsString(
+                    request.getScopes() != null ? request.getScopes() : List.of()
+                ));
             params.put("p_i_created_by", userId);
             params.put("p_i_author_name", username);
 

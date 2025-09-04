@@ -37,7 +37,7 @@ public class BillService {
     public JsonNode saveOrUpdateBill(BillRequest request) {
         return jdbcTemplate.execute((Connection con) -> {
             try {
-                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+                CallableStatement cs = con.prepareCall("{ call dnrcore.prr_add_bill_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 
                 cs.setString(1, request.getFlag());
                 cs.setObject(2, request.getId());
@@ -55,16 +55,17 @@ public class BillService {
                 cs.setBigDecimal(14, request.getAmountReceived());
                 cs.setBigDecimal(15, request.getBalanceDue());
                 cs.setString(16, request.getPaymentMode());
-                cs.setObject(17, getLoggedInUserId()); // p_i_created_by
+                cs.setString(17, request.getCurrencyCode());
+                cs.setObject(18, getLoggedInUserId()); // p_i_created_by
 
                 // items JSONB
-                cs.setObject(18, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
+                cs.setObject(19, objectMapper.writeValueAsString(request.getItems()), Types.OTHER); // p_i_items
 
-                cs.registerOutParameter(19, Types.OTHER); // p_json_result
+                cs.registerOutParameter(20, Types.OTHER); // p_json_result
 
                 cs.execute();
 
-                Object result = cs.getObject(19);
+                Object result = cs.getObject(20);
                 return objectMapper.readTree(result.toString());
 
             } catch (Exception e) {

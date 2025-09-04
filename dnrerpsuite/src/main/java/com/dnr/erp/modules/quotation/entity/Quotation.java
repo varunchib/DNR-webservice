@@ -53,7 +53,10 @@ public class Quotation {
     
     @Column(name = "title")
     private String title;
-
+    
+    @Column(name = "currency_code", length = 3)
+    private String currencyCode;
+    
     // Optional JSON snapshot or misc data (if you use it)
     @Column(name = "table_data")
     private String tableData;
@@ -76,6 +79,9 @@ public class Quotation {
     // NEW: VAT percentage/value stored for this quotation
     @Column(name = "vat")
     private BigDecimal vat;
+    
+    @Column(name = "scopes", columnDefinition = "jsonb")
+    private String scopes;
 
     /* ---------- Getters / Setters ---------- */
 
@@ -180,6 +186,14 @@ public class Quotation {
 		this.title = title;
 	}
 
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
 	public String getTableData() {
         return tableData;
     }
@@ -228,4 +242,13 @@ public class Quotation {
     public void setVat(BigDecimal vat) {
         this.vat = vat;
     }
+
+	public String getScopes() {
+		return scopes;
+	}
+
+	public void setScopes(String scopes) {
+		this.scopes = scopes;
+	}
+    
 }

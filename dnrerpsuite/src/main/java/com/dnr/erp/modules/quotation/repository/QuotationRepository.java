@@ -50,10 +50,12 @@ public class QuotationRepository {
             String subject,
             String project,
             String title,
+            String currencyCode,
             String columnsJson,
             String rowsJson,
             UUID createdBy,
-            String authorName
+            String authorName,
+            String scopesJson
     ) {
         StoredProcedureQuery query = entityManager.createStoredProcedureQuery("dnrcore.prr_create_quotation");
 
@@ -69,10 +71,12 @@ public class QuotationRepository {
         query.registerStoredProcedureParameter("p_i_subject", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_project", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_title", String.class, jakarta.persistence.ParameterMode.IN);
+        query.registerStoredProcedureParameter("p_i_currency_code", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_columns", String.class, jakarta.persistence.ParameterMode.IN); // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_rows", String.class, jakarta.persistence.ParameterMode.IN);    // VARCHAR not CLOB
         query.registerStoredProcedureParameter("p_i_created_by", UUID.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_i_author_name", String.class, jakarta.persistence.ParameterMode.IN); // NEW
+        query.registerStoredProcedureParameter("p_i_scopes", String.class, jakarta.persistence.ParameterMode.IN);
         query.registerStoredProcedureParameter("p_json_result", String.class, jakarta.persistence.ParameterMode.OUT);
 
         query.setParameter("p_i_date", date);
@@ -87,10 +91,12 @@ public class QuotationRepository {
         query.setParameter("p_i_subject", subject);
         query.setParameter("p_i_project", project);
         query.setParameter("p_i_title", title);
+        query.setParameter("p_i_currency_code", currencyCode);
         query.setParameter("p_i_columns", columnsJson);
         query.setParameter("p_i_rows", rowsJson);
         query.setParameter("p_i_created_by", createdBy);
         query.setParameter("p_i_author_name", authorName);
+        query.setParameter("p_i_scopes", scopesJson);
 
         query.execute();
         String jsonResult = (String) query.getOutputParameterValue("p_json_result");
